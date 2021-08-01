@@ -29,10 +29,10 @@ namespace TacarEZDocusignAPI
             doc1.DocumentId = "1";
             doc1.Name = "Document with link";
             DocumentHtmlDefinition htmlDef = new DocumentHtmlDefinition();
-            DocumentHtmlDisplayAnchor displayAnchors = new DocumentHtmlDisplayAnchor
+            DocumentHtmlDisplayAnchor displayAnchor1 = new DocumentHtmlDisplayAnchor
             {
-                StartAnchor = "responsive_table_start",
-                EndAnchor = "responsive_table_end",
+                StartAnchor = "$$$S1$$$",
+                EndAnchor = "$$$E1$$$",
                 RemoveStartAnchor = true,
                 RemoveEndAnchor = true,
                 CaseSensitive = true,
@@ -43,7 +43,27 @@ namespace TacarEZDocusignAPI
                     CellStyle = "text-align:left;border:solid 0px #000;margin:0px;padding:0px;"
                 }
             };
-            htmlDef.DisplayAnchors = new List<DocumentHtmlDisplayAnchor>() { displayAnchors };
+            DocumentHtmlDisplayAnchor displayAnchor2 = new DocumentHtmlDisplayAnchor
+            {
+                StartAnchor = "$$$S2$$$",
+                EndAnchor = "$$$E2$$$",
+                RemoveStartAnchor = true,
+                RemoveEndAnchor = true,
+                CaseSensitive = true,
+                DisplaySettings = new DocumentHtmlDisplaySettings
+                {
+                    Display = "collapsed",
+                    TableStyle = "margin-bottom: 20px;width:100%;max-width:816px;margin-left:auto;margin-right:auto;",
+                    CellStyle = "text-align:left;border:solid 0px #000;margin:0px;padding:0px;",
+                    DisplayLabel = "More information",
+                    CollapsibleSettings = new DocumentHtmlCollapsibleDisplaySettings
+                    {
+                        ArrowOpen = "up",
+                        ArrowClosed = "down"
+                    }
+                }
+            };
+            htmlDef.DisplayAnchors = new List<DocumentHtmlDisplayAnchor>() { displayAnchor1, displayAnchor2 };
             htmlDef.Source = HtmlUtility.LoadHtmlFile("testdocument.html");
             htmlDef.Source = htmlDef.Source.Replace("{{signerName}}", signerName);
             htmlDef.Source = htmlDef.Source.Replace("{{signerEmail}}", signerEmail);
@@ -116,7 +136,7 @@ namespace TacarEZDocusignAPI
             env.Recipients = recipients;
             // Request that the envelope be sent by setting |status| to "sent".
             // To request that the envelope be created as a draft, set to "created"
-            env.Status = "sent";
+            env.Status = "created";
 
             return env;
         }
