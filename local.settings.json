@@ -1,0 +1,12 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "basePath": "https://demo.docusign.net/restapi",
+    "clientId": "5f2720f8-df6f-4a79-819c-86feb08a617b",
+    "userId": "8a8186c0-f41f-42a6-8b7e-4aff3077b589",
+    "accountId": "1a2baa62-6cc2-49ea-be82-135cd7f1b024",
+    "oAuthBasePath": "account-d.docusign.com"
+  }
+}
