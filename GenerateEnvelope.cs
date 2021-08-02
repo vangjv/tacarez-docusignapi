@@ -14,11 +14,17 @@ namespace TacarEZDocusignAPI
     {
         [FunctionName("GenerateEnvelope")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic envelopeRequest = JsonConvert.DeserializeObject(requestBody);
+            if (envelopeRequest.name == null || envelopeRequest.email == null)
+            {
+                return new BadRequestObjectResult("Invalid request");
+            }
             string accessToken = Utility.GetAccessToken();
-            var envelopeId = SendEmailEnvelope.SendEnvelopeViaEmail("jonathan.vang@gmail.com", "jonathan vang", accessToken, Utility.GetEnvironmentVariable("basePath"), Utility.GetEnvironmentVariable("accountId"));
+            var envelopeId = SendEmailEnvelope.SendEnvelopeViaEmail((string)envelopeRequest.email, (string)envelopeRequest.name, accessToken, Utility.GetEnvironmentVariable("basePath"), Utility.GetEnvironmentVariable("accountId"));
 
             Console.WriteLine("Hello World!");
 
