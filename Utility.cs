@@ -1,6 +1,8 @@
 ﻿using DocuSign.eSign.Client;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace TacarEZDocusignAPI
@@ -21,8 +23,10 @@ namespace TacarEZDocusignAPI
                     "signature",
                     "impersonation",
                 };
+            var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var rootDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
             var accessToken = _apiClient.RequestJWTUserToken(GetEnvironmentVariable("clientId"), GetEnvironmentVariable("userId"), GetEnvironmentVariable("oAuthBasePath"),
-                DSHelper.ReadFileContent(DSHelper.PrepareFullPrivateKeyFilePath("private.key")), 1, scopes);
+                DSHelper.ReadFileContent(DSHelper.PrepareFullPrivateKeyFilePath(rootDirectory + "/private.key")), 1, scopes);
             return accessToken.access_token;
         }
     }

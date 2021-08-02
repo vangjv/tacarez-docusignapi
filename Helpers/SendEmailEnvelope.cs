@@ -136,7 +136,7 @@ namespace TacarEZDocusignAPI
             env.Recipients = recipients;
             // Request that the envelope be sent by setting |status| to "sent".
             // To request that the envelope be created as a draft, set to "created"
-            env.Status = "created";
+            env.Status = "sent";
 
             return env;
         }
