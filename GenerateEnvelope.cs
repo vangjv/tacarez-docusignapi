@@ -10,9 +10,9 @@ using Newtonsoft.Json;
 
 namespace TacarEZDocusignAPI
 {
-    public static class Function1
+    public static class GenerateEnvelope
     {
-        [FunctionName("Function1")]
+        [FunctionName("GenerateEnvelope")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
