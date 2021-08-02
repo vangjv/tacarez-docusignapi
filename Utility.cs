@@ -25,8 +25,9 @@ namespace TacarEZDocusignAPI
                 };
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var rootDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+            Console.WriteLine("ROOT DIRECTORY:" + rootDirectory);
             var accessToken = _apiClient.RequestJWTUserToken(GetEnvironmentVariable("clientId"), GetEnvironmentVariable("userId"), GetEnvironmentVariable("oAuthBasePath"),
-                DSHelper.ReadFileContent(DSHelper.PrepareFullPrivateKeyFilePath(rootDirectory + "/private.key")), 1, scopes);
+                DSHelper.ReadFileContent(DSHelper.PrepareFullPrivateKeyFilePath(rootDirectory + "\\private.key")), 1, scopes);            
             return accessToken.access_token;
         }
     }

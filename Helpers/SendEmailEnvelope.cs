@@ -3,6 +3,8 @@ using DocuSign.eSign.Client;
 using DocuSign.eSign.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace TacarEZDocusignAPI
@@ -64,7 +66,9 @@ namespace TacarEZDocusignAPI
                 }
             };
             htmlDef.DisplayAnchors = new List<DocumentHtmlDisplayAnchor>() { displayAnchor1, displayAnchor2 };
-            htmlDef.Source = HtmlUtility.LoadHtmlFile("testdocument.html");
+            var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var rootDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+            htmlDef.Source = HtmlUtility.LoadHtmlFile(rootDirectory + "\\testdocument.html");
             htmlDef.Source = htmlDef.Source.Replace("{{signerName}}", signerName);
             htmlDef.Source = htmlDef.Source.Replace("{{signerEmail}}", signerEmail);
             doc1.HtmlDefinition = htmlDef;
