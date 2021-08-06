@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using TacarEZDocusignAPI.Models;
 
 namespace TacarEZDocusignAPI
 {
@@ -18,13 +19,14 @@ namespace TacarEZDocusignAPI
             ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic envelopeRequest = JsonConvert.DeserializeObject(requestBody);
-            if (envelopeRequest.name == null || envelopeRequest.email == null)
+            EnvelopeRequest envelopeRequest = JsonConvert.DeserializeObject<EnvelopeRequest>(requestBody);
+            //dynamic envelopeRequest = JsonConvert.DeserializeObject(requestBody);
+            if (envelopeRequest.recipients.Count < 1)
             {
                 return new BadRequestObjectResult("Invalid request");
             }
             string accessToken = Utility.GetAccessToken();
-            var envelopeId = SendEmailEnvelope.SendEnvelopeViaEmail((string)envelopeRequest.email, (string)envelopeRequest.name, accessToken, Utility.GetEnvironmentVariable("basePath"), Utility.GetEnvironmentVariable("accountId"));
+            var envelopeId = SendEmailEnvelope.SendEnvelopeViaEmail(envelopeRequest, accessToken, Utility.GetEnvironmentVariable("basePath"), Utility.GetEnvironmentVariable("accountId"));
 
             Console.WriteLine("Hello World!");
 

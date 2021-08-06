@@ -6,14 +6,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using TacarEZDocusignAPI.Models;
 
 namespace TacarEZDocusignAPI
 {
     class SendEmailEnvelope
     {
-        public static string SendEnvelopeViaEmail(string signerEmail, string signerName, string accessToken, string basePath, string accountId)
+        public static string SendEnvelopeViaEmail(EnvelopeRequest envelopeRequest, string accessToken, string basePath, string accountId)
         {
-            EnvelopeDefinition env = MakeEnvelope(signerEmail, signerName);
+            EnvelopeDefinition env = MakeEnvelope(envelopeRequest);
             var apiClient = new ApiClient(basePath);
             apiClient.Configuration.DefaultHeader.Add("Authorization", "Bearer " + accessToken);
             EnvelopesApi envelopesApi = new EnvelopesApi(apiClient);
@@ -22,7 +23,7 @@ namespace TacarEZDocusignAPI
         }
 
 
-        private static EnvelopeDefinition MakeEnvelope(string signerEmail, string signerName)
+        private static EnvelopeDefinition MakeEnvelope(EnvelopeRequest envelopeRequest)
         {
             // create the envelope definition
             EnvelopeDefinition env = new EnvelopeDefinition();
@@ -69,8 +70,10 @@ namespace TacarEZDocusignAPI
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var rootDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
             htmlDef.Source = HtmlUtility.LoadHtmlFile(rootDirectory + "\\testdocument.html");
-            htmlDef.Source = htmlDef.Source.Replace("{{signerName}}", signerName);
-            htmlDef.Source = htmlDef.Source.Replace("{{signerEmail}}", signerEmail);
+            htmlDef.Source = htmlDef.Source.Replace("{{signerName}}", envelopeRequest.recipients[0].name);
+            htmlDef.Source = htmlDef.Source.Replace("{{signerEmail}}", envelopeRequest.recipients[0].email);
+            htmlDef.Source = htmlDef.Source.Replace("{{mapLink}}", envelopeRequest.mapLink);
+            htmlDef.Source = htmlDef.Source.Replace("{{linkText}}", envelopeRequest.linkText);
             doc1.HtmlDefinition = htmlDef;
 
             // The order in the docs array determines the order in the envelope
@@ -80,11 +83,40 @@ namespace TacarEZDocusignAPI
             // We're setting the parameters via the object creation
             Signer signer1 = new Signer
             {
-                Email = signerEmail,
-                Name = signerName,
+                Email = envelopeRequest.recipients[0].email,
+                Name = envelopeRequest.recipients[0].name,
                 RecipientId = "1",
                 RoutingOrder = "1"
             };
+
+            List<Signer> signerslist = new List<Signer>();
+
+            //envelopeRequest.recipients.ForEach(individualRecipient =>
+            //{
+            //    Signer newSigner = new Signer
+            //    {
+            //        Email = individualRecipient.email,
+            //        Name = individualRecipient.name,
+            //        RecipientId = "1",
+            //        RoutingOrder = "1"
+            //    };
+            //});
+
+            for (int i = 0; i < envelopeRequest.recipients.Count; i++)
+            {
+                if (envelopeRequest.recipients[i] !=null)
+                {
+                    Signer newSigner = new Signer
+                    {
+                        Email = envelopeRequest.recipients[i].email,
+                        Name = envelopeRequest.recipients[i].name,
+                        RecipientId = (i + 1).ToString(),
+                        RoutingOrder = (i + 1).ToString()
+                    };
+                    signerslist.Add(newSigner);
+                }
+            }
+
 
             // routingOrder (lower means earlier) determines the order of deliveries
             // to the recipients. Parallel routing order is supported by using the
