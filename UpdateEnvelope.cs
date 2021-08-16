@@ -8,14 +8,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TacarEZDocusignAPI.Models;
+using TacarEZDocusignAPI.Helpers;
 
 namespace TacarEZDocusignAPI
 {
-    public static class GenerateEnvelope
+    public static class UpdateEnvelope
     {
-        [FunctionName("GenerateEnvelope")]
+        [FunctionName("UpdateEnvelope")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)] HttpRequest req,
             ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -27,7 +28,7 @@ namespace TacarEZDocusignAPI
             }
             string accessToken = Utility.GetAccessToken();
             //var envelopeId = SendEmailEnvelope.SendEnvelopeViaEmail(envelopeRequest, accessToken, Utility.GetEnvironmentVariable("basePath"), Utility.GetEnvironmentVariable("accountId"));
-            var envelopeId = SendStakeholderReview.SendStakeHolderReviewEmails(envelopeRequest, accessToken, Utility.GetEnvironmentVariable("basePath"), Utility.GetEnvironmentVariable("accountId"));
+            var envelopeId = UpdateEnvelopeHelper.UpdateEnvelopeWith2Documents(envelopeRequest, accessToken, Utility.GetEnvironmentVariable("basePath"), Utility.GetEnvironmentVariable("accountId"), "463362dc-b520-44f8-9350-62fd94c23914");
             return new OkObjectResult(envelopeId);
         }
     }

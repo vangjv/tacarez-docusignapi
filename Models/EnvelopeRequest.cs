@@ -6,11 +6,18 @@ namespace TacarEZDocusignAPI.Models
 {
     public class EnvelopeRequest
     {
-        public string featureName { get; set; }
-        public string mapLink { get; set; }
-        public string linkText { get; set; }
-        public string mapVersion { get; set; }
-        public string changeNotes { get; set; }
+        public string senderName { get; set; }
+        public string senderEmail { get; set; }
+        public string messageFromSender { get; set; }
+        public string mapFeatureName { get; set; }
+        public string originalMapFeatureLink { get; set; }
+        public string mergeRequestLink { get; set; }
+        public string mergeRequester { get; set; }
+        public string mergeRequesterNotes { get; set; }
+        public string stakeholderReviewStartDate { get; set; }
+        public string hashOfMergeRequestData { get; set; }
+        public string rawMergeRequestData { get; set; }
+        public string mapPreviewImage { get; set; }
         public List<EnvelopeRecipient> recipients { get; set; }
     }
 

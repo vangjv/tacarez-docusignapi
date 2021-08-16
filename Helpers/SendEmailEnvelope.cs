@@ -72,8 +72,6 @@ namespace TacarEZDocusignAPI
             htmlDef.Source = HtmlUtility.LoadHtmlFile(rootDirectory + "\\testdocument.html");
             htmlDef.Source = htmlDef.Source.Replace("{{signerName}}", envelopeRequest.recipients[0].name);
             htmlDef.Source = htmlDef.Source.Replace("{{signerEmail}}", envelopeRequest.recipients[0].email);
-            htmlDef.Source = htmlDef.Source.Replace("{{mapLink}}", envelopeRequest.mapLink);
-            htmlDef.Source = htmlDef.Source.Replace("{{linkText}}", envelopeRequest.linkText);
             doc1.HtmlDefinition = htmlDef;
 
             // The order in the docs array determines the order in the envelope
